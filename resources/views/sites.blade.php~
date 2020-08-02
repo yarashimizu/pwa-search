@@ -5,12 +5,12 @@
   <!-- バリデーションエラーの表示に使用するエラーファイル-->
   @include('common.errors')
   <!-- タスク登録フォーム -->
-  <form action="{{ route('tasks.store') }}" method="POST" class="form-horizontal">
+  <form action="{{ route('sites.store') }}" method="POST" class="form-horizontal">
     @csrf
     <div class="form-group">
       <!-- タスク名 -->
       <div class="col-sm-6">
-        <label for="task" class="col-sm-3 control-label">Taskssssssssfasjdlkfja</label>
+        <label for="task" class="col-sm-3 control-label">Tasksdfsafasdsdas</label>
         <input type="text" name="task" id="task" class="form-control">
       </div>
     </div>
@@ -31,7 +31,7 @@
       </div>
     </div>
   </form>
-  @if (count($tasks) > 0)
+  @if (count($sites) > 0)
   <div class="panel panel-default">
     <div class="panel-heading">タスクリスト</div>
       <div class="panel-body">
@@ -44,7 +44,7 @@
           </thead>
           <!-- テーブル本体 -->
           <tbody>
-            @foreach ($tasks as $task)
+            @foreach ($sites as $task)
             <tr>
               <td class="table-text">
                 <div>{{ $task->task }}</div>
@@ -56,7 +56,7 @@
                 <div>{{ $task->comment }}</div>
               </td>
               <td>
-                <form action="{{ route('tasks.edit',$task->id) }}" method="GET">
+                <form action="{{ route('sites.edit',$task->id) }}" method="GET">
                   @csrf
                   <button type="submit" class="btn btn-primary">更新</button>
                 </form>
@@ -64,7 +64,7 @@
               <!-- 追加ここまで -->
               <td>
                 <!-- 削除ボタン -->
-                <form action="{{ route('tasks.destroy',$task->id) }}" method="POST">
+                <form action="{{ route('sites.destroy',$task->id) }}" method="POST">
                   @method('delete')
                   @csrf
                   <button type="submit" class="btn btn-danger">削除</button>

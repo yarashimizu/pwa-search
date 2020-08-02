@@ -13,16 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', 'SitesController@index')->name('index');
 
-// 下記のように編集
+/*
 Route::resource('tasks', 'TasksController')->only([
   'index', 'store', 'edit', 'update', 'destroy'
+]);
+*/
+
+Route::resource('sites', 'SitesController')->only([
+  'index', 'store', 'edit', 'update', 'destroy', 'regist'
 ]);
 
 Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/home', 'TasksController@index')->name('home');
+// サイト関連
+Route::get('/home', 'SitesController@index')->name('home');
+Route::get('/sites', 'SitesController@index')->name('sites');
+
+
+Route::get('/regist', 'SitesController@showRegistForm')->name('showRegistForm');
+
+
+
+// その他
