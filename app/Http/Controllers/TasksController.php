@@ -21,7 +21,7 @@ class TasksController extends Controller
     public function index() {
       // $tasks = Task::orderBy('deadline', 'asc')->get();
       // 下記のように変更
-      $tasks = Task::where('user_id',Auth::user()->id)
+      $tasks = Task::where('user_id', Auth::user()->id)
               ->orderBy('deadline', 'asc')
               ->get();
       // 以降は変更なし

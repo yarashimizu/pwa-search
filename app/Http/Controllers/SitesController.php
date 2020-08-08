@@ -19,8 +19,9 @@ class SitesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
+    public function index(Request $request = null){
         $sites = Site::get();
+        
         return view(
             'sites',
             [
@@ -45,29 +46,34 @@ class SitesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-    //バリデーション
-      $validator = Validator::make($request->all(), [
-        'name' => 'required|max:255',
-        'url' => 'required',
-      ]);
-      //バリデーション:エラー
-      if ($validator->fails()) {
-        return redirect()
-          ->route('index')
-          ->withInput()
-          ->withErrors($validator);
-      }
-      // Eloquentモデル
-      $site = new Site;
-      // $site->user_id = Auth::user()->id;
-      $site->name = $request->name;
-      $site->url = $request->url;
-      $site->comment = $request->comment;
-      $site->save();
-      //「/」ルートにリダイレクト
-      return redirect()->route('index');
+    public function store(ImageUploadRequest $request) {
+        $imagefile = $request->file('imagefile');
+        ddd($imagefile);
+
+        //バリデーション
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'url' => 'required',
+        ]);
+        //バリデーション:エラー
+        if ($validator->fails()) {
+            return redirect()
+                ->route('index')
+                ->withInput()
+                ->withErrors($validator);
+        }
+        // Eloquentモデル
+        $site = new Site;
+        // $site->user_id = Auth::user()->id;
+        $site->name = $request->name;
+        $site->url = $request->url;
+        // 複数登録することができるようにするかは要検討
+        $site->category = $request->category . "";
+        $site->company = $request->company . "";
+        $site->comment = $request->comment . "";
+        $site->save();
+        //「/」ルートにリダイレクト
+        return redirect()->route('index');
     }
 
     /**
@@ -104,15 +110,20 @@ class SitesController extends Controller
         //
     }
 
-    // サイトの登録画面の表示
+    // サイトの登録/編集画面の表示 
     public function showRegistForm($id = null) {
-        // idが渡って来た場合には編集
 
-        // idが渡って来ない場合には新規登録
+        // 権限が最強の場合にのみ編集ページを表示許可
+        $user = \Auth::user();
+        if ($user->role !== 99) {
+            return redirect()->route('index');
+        }
+
+        // 入力項目を定義
         $formInfos = array(
             'name' => array(
                 'name' => 'サイト名',
-                'type' => 'text'
+                'type' => 'text',
             ),
             'company' => array(
                 'name' => '運営者名',
@@ -124,13 +135,27 @@ class SitesController extends Controller
             ),
             'category' => array(
                 'name' => 'カテゴリー',
-                'type' => 'text'
+                'type' => 'select'
             ),
             'comment' => array(
                 'name' => 'コメント',
                 'type' => 'text'
+            ),
+            'image'   => array(
+                'name' =>'イメージ画像',
+                'type' => 'file'
             )
         );
+
+        // idが渡って来た場合には編集
+        $site = array();
+        if (!empty($id)) {
+            // id から現在の店舗情報を取得
+            $site = Site::where('id', (int)$id)->first();
+        }
+        foreach ($formInfos as $key => $info) {
+            $formInfos[$key]['value'] = $site ? $site[$key] : '';
+        }
 
         // 設定ファイルからカテゴリーを取得
         $category = Config::get('app.category');

@@ -25,6 +25,12 @@ Route::resource('sites', 'SitesController')->only([
   'index', 'store', 'edit', 'update', 'destroy', 'regist'
 ]);
 
+// 登録画面に遷移
+Route::get('/regist', 'SitesController@showRegistForm')->name('showRegistForm');
+// 編集画面に遷移
+Route::get('/regist/{id}', 'SitesController@showRegistForm')->name('showRegistForm');
+
+
 Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
@@ -33,7 +39,6 @@ Route::get('/home', 'SitesController@index')->name('home');
 Route::get('/sites', 'SitesController@index')->name('sites');
 
 
-Route::get('/regist', 'SitesController@showRegistForm')->name('showRegistForm');
 
 
 

@@ -16,6 +16,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            // 権限 0:一般ユーザ / 1:pwaサイト管理者 / 99:管理者 (config.authに定義)
+            $table->integer('role')->default(0);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
