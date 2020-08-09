@@ -50,10 +50,6 @@ class SitesController extends Controller
     public function store(Request $request) {
         $this->middleware('auth');
 
-        $path = $request->file('imagefile')->store('public/tmp');
-        ddd($path);
-
-
         //バリデーション
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
@@ -66,14 +62,19 @@ class SitesController extends Controller
                 ->withInput()
                 ->withErrors($validator);
         }
-        // Eloquentモデル
-        $site = new Site;
 
+        if (!empty($request->id)) {
+            $site = Site::where('id', (int)$request->id)->first();
+        } else {
+            $site = new Site;
+        }
 
         // $site->user_id = Auth::user()->id;
         $site->name = $request->name;
         $site->url = $request->url;
-        $site->category = $request->category . ""; // 複数登録することができるようにするかは要検討
+        $site->category = $request->category . "";                             // 複数登録することができるようにするかは要検討
+        $site->top_image = basename($request->file('imagefile')->store('public/sites')); // 画像を保存してそのまま登録(後で確認画面を作成する)
+        $site->icon_image = "";
         $site->company = $request->company . "";
         $site->comment = $request->comment . "";
         $site->save();
@@ -116,7 +117,7 @@ class SitesController extends Controller
     }
 
     // サイトの登録/編集画面の表示 
-    public function showRegistForm($id = null) {
+    public function showRegistForm($id = "") {
         $this->middleware('auth');
 
         // 権限が最強の場合にのみ編集ページを表示許可
@@ -150,7 +151,7 @@ class SitesController extends Controller
                 'name' => 'コメント',
                 'type' => 'text'
             ),
-            'image'   => array(
+            'top_image'   => array(
                 'name' =>'イメージ画像',
                 'type' => 'file'
             )
@@ -161,6 +162,9 @@ class SitesController extends Controller
         if (!empty($id)) {
             // id から現在の店舗情報を取得
             $site = Site::where('id', (int)$id)->first();
+            if (empty($site)) {
+                $id = '';
+            }
         }
         foreach ($formInfos as $key => $info) {
             $formInfos[$key]['value'] = $site ? $site[$key] : '';
@@ -172,6 +176,7 @@ class SitesController extends Controller
         return view(
             'regist',
             array(
+                'id'        => $id,
                 'formInfos' => $formInfos,
                 'category'  => $category,
             )

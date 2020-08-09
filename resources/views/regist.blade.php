@@ -11,6 +11,7 @@
   >
     @csrf
       <!-- PHP側で定義 -->
+      <input type="hidden" name="id" value="{{$id}}" />
       @foreach($formInfos as $column => $info)
         <div class="col-sm-6 form-group">
           <label for="{{$column}}" class="col-sm-3 control-label">{{$info['name']}}</label>
@@ -27,6 +28,9 @@
             </select>
           @elseif($info['type'] == 'file')
           <!-- ファイルアップロード形式-->
+            @if(!empty($info['value']))
+              <img src="{{ asset('storage/' . $info['value']) }}" />
+            @endif
             <div id="imagepre"></div>
           @else
           <!-- input形式 -->
