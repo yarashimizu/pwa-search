@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="panel-body">
+<div class="panel-body ">
   <div class="panel panel-default">
     <div class="panel-heading">検索条件</div>
     <form action="{{ route('index') }}" method="GET">
@@ -37,21 +37,23 @@
               <td class="table-text">
                 <div>{{ $site->comment }}</div>
               </td>
-              <td>
-                <form action="{{ route('sites.edit',$site->id) }}" method="GET">
-                  @csrf
-                  <button type="submit" class="btn btn-primary">更新</button>
-                </form>
-              </td>
-              <!-- 追加ここまで -->
-              <td>
-                <!-- 削除ボタン -->
-                <form action="{{ route('sites.destroy',$site->id) }}" method="POST">
-                  @method('delete')
-                  @csrf
-                  <button type="submit" class="btn btn-danger">削除</button>
-                </form>
-              </td>
+
+              @if($user['role'] ==  99)
+                <td>
+                  <form action="{{ route('sites.edit',$site->id) }}" method="GET">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">更新</button>
+                  </form>
+                </td>
+                <td>
+                  <!-- 削除ボタン -->
+                  <form action="{{ route('sites.destroy',$site->id) }}" method="POST">
+                    @method('delete')
+                    @csrf
+                    <button type="submit" class="btn btn-danger">削除</button>
+                  </form>
+                </td>
+              @endif
             </tr>
             @endforeach
           </tbody>

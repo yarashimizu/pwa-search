@@ -27,7 +27,6 @@
             </select>
           @elseif($info['type'] == 'file')
           <!-- ファイルアップロード形式-->
-            <!-- input type="file" name="imagefile" value=""/-->
             <div id="imagepre"></div>
           @else
           <!-- input形式 -->

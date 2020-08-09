@@ -12,20 +12,23 @@ class Imagepre extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            image_src: ""
+            image_src: "",
         };
       }
     
     handleChangeFile(e) {
+        console.log("呼ばれたっちゃ！");
         var files = e.target.files;
         var image_url = files.length===0 ? "" : createObjectURL(files[0]);
-        this.setState({image_src: image_url});
+        this.setState({
+            image_src: image_url,
+        });
     }
 
     render(){
         return(
             <div>
-                <input type="file" name="imagefile" value="" ref="file" onChange={(e) => this.handleChangeFile(e)} /><br />
+                <input type="file" id="imagefile" name="imagefile" ref="file" onChange={(e) => this.handleChangeFile(e)} /><br />
                 <img src={this.state.image_src} />
             </div>
         );

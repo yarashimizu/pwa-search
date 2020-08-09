@@ -65914,6 +65914,7 @@ var Imagepre = /*#__PURE__*/function (_React$Component) {
   _createClass(Imagepre, [{
     key: "handleChangeFile",
     value: function handleChangeFile(e) {
+      console.log("呼ばれたっちゃ！");
       var files = e.target.files;
       var image_url = files.length === 0 ? "" : createObjectURL(files[0]);
       this.setState({
@@ -65927,8 +65928,8 @@ var Imagepre = /*#__PURE__*/function (_React$Component) {
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", {
         type: "file",
+        id: "imagefile",
         name: "imagefile",
-        value: "",
         ref: "file",
         onChange: function onChange(e) {
           return _this2.handleChangeFile(e);

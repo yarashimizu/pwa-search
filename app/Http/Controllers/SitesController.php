@@ -12,7 +12,7 @@ use Config;
 class SitesController extends Controller
 {
     public function __construct() {
-      $this->middleware('auth');
+      // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -21,11 +21,12 @@ class SitesController extends Controller
      */
     public function index(Request $request = null){
         $sites = Site::get();
-        
+        $user = \Auth::user();
         return view(
             'sites',
             [
                 'sites' => $sites,
+                'user'  => $user
             ]
         );
     }
@@ -46,9 +47,12 @@ class SitesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ImageUploadRequest $request) {
-        $imagefile = $request->file('imagefile');
-        ddd($imagefile);
+    public function store(Request $request) {
+        $this->middleware('auth');
+
+        $path = $request->file('imagefile')->store('public/tmp');
+        ddd($path);
+
 
         //バリデーション
         $validator = Validator::make($request->all(), [
@@ -64,11 +68,12 @@ class SitesController extends Controller
         }
         // Eloquentモデル
         $site = new Site;
+
+
         // $site->user_id = Auth::user()->id;
         $site->name = $request->name;
         $site->url = $request->url;
-        // 複数登録することができるようにするかは要検討
-        $site->category = $request->category . "";
+        $site->category = $request->category . ""; // 複数登録することができるようにするかは要検討
         $site->company = $request->company . "";
         $site->comment = $request->comment . "";
         $site->save();
@@ -112,9 +117,13 @@ class SitesController extends Controller
 
     // サイトの登録/編集画面の表示 
     public function showRegistForm($id = null) {
+        $this->middleware('auth');
 
         // 権限が最強の場合にのみ編集ページを表示許可
         $user = \Auth::user();
+        if (empty($user)) {
+            return redirect()->route('index');
+        }
         if ($user->role !== 99) {
             return redirect()->route('index');
         }
