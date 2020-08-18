@@ -29,7 +29,7 @@
           @elseif($info['type'] == 'file')
           <!-- ファイルアップロード形式-->
             @if(!empty($info['value']))
-              <img src="{{ asset('storage/' . $info['value']) }}" />
+              <img src="{{ asset('storage/sites/' . $info['value']) }}" />
             @endif
             <div id="imagepre"></div>
           @else

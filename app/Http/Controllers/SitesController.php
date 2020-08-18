@@ -22,11 +22,13 @@ class SitesController extends Controller
     public function index(Request $request = null){
         $sites = Site::get();
         $user = \Auth::user();
+        $category = Config::get('app.category');
         return view(
             'sites',
             [
-                'sites' => $sites,
-                'user'  => $user
+                'sites'    => $sites,
+                'user'     => $user,
+                'category' => $category,
             ]
         );
     }
@@ -126,7 +128,7 @@ class SitesController extends Controller
             return redirect()->route('index');
         }
         if ($user->role !== 99) {
-            return redirect()->route('index');
+            // return redirect()->route('index');
         }
 
         // 入力項目を定義
